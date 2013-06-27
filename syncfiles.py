@@ -21,22 +21,24 @@ class FileOper:
                 dic[str(d[0])] = d[1]
             self.source = dic['source_dir']
             self.target = dic['target_dir']
-            print 'source = %s,target = %s' % (self.source,self.target)
+            print 'source = %s' % self.source
+            print 'target = %s' % self.target
         finally:
             file_object.close()
 
-
-class DirCompare:
-    def compare(self,source,target):
-        print os.listdir(source)
-        ss = [ s for s in os.listdir(source) if
-                os.path.isfile(os.path.join(os.curdir,s))]
-        print ss
-
+    def copyFiles(self):
+        for f in os.listdir(self.source):
+            sf = os.path.join(self.source,f)
+            tf = os.path.join(self.target,f)
+            if os.path.isfile(sf):
+                if not os.path.exists(self.target):
+                    os.makedirs(self.target)
+                if not os.path.exists(tf) or (os.path.exists(tf)
+                        and (os.path.getsize(tf) != (os.path.getsize(sf)))):
+                    open(tf,'wb').write(open(sf,'rb').read())
+                    print 'copy file %s' % sf
 
 if __name__ == '__main__':
     oper = FileOper()
     oper.readConfig()
-    compare = DirCompare()
-    compare.compare(oper.source,oper.target)
-
+    oper.copyFiles()
