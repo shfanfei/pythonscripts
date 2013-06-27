@@ -1,0 +1,4 @@
+pythonscripts
+=============
+
+Learning python exercises
